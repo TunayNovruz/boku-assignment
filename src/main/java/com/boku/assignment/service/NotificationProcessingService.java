@@ -23,16 +23,14 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 @EnableAsync
 public class NotificationProcessingService {
-
     private static final Logger logger = LoggerFactory.getLogger(NotificationProcessingService.class);
     private final NotificationService notificationService;
     private final MerchantService merchantService;
     private final ResponseService responseService;
-    //todo we can decrease/increase depending on the load and resources
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10); //todo move to constants/config
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     @Async
-    @Scheduled(fixedRate = 1000) //todo
+    @Scheduled(fixedRate = 100)
     public void processNotifications() {
         List<NotificationDto> notifications = notificationService.getNextNotifications();
         if (notifications == null || notifications.size() == 0) return;

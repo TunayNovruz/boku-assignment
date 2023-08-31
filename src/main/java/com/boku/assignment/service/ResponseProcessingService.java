@@ -21,15 +21,13 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 @EnableAsync
 public class ResponseProcessingService {
-
     private static final Logger logger = LoggerFactory.getLogger(ResponseProcessingService.class);
     private final ResponseService responseService;
     private final ProviderService providerService;
-    //todo we can decrease/increase depending on the load and resources
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10); //todo move to constants/config
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     @Async
-    @Scheduled(fixedRate = 1000) // process 10 job in 100 ms
+    @Scheduled(fixedRate = 100)
     public void processNotifications() {
         List<ProviderResponse> responses = responseService.getNextResponses();
         if (responses == null || responses.size() == 0) return;
@@ -53,7 +51,7 @@ public class ResponseProcessingService {
                 //todo retry strategy or Dead Letter Queue
                 responseService.addResponse(response); //adding to end of the queue again
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             responseService.addResponse(response);
             logger.error(e.getMessage());
         }
