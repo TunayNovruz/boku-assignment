@@ -20,3 +20,11 @@ Possible improvements:
 * implement retry strategy rather than adding responses to queue again.
 * Store failed/success/waiting transactions in db
 * implement dead letter queue for failed transactions
+* Exception handling
+
+
+## Running on docker
+```shell
+ docker build -t assignment .
+ docker run -p 8080:8080 assignment
+```
