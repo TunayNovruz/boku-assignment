@@ -21,7 +21,7 @@ public class MerchantService {
     }
 
     private String determineMerchantUrl(String keyword) {
-        //todo
+        //todo store as config or enum
         return "https://testmerchant.fortumo.mobi/api/sms/" + keyword.toLowerCase();
     }
 }

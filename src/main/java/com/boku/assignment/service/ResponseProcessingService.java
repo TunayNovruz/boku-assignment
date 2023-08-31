@@ -24,7 +24,7 @@ public class ResponseProcessingService {
     private static final Logger logger = LoggerFactory.getLogger(ResponseProcessingService.class);
     private final ResponseService responseService;
     private final ProviderService providerService;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10); //todo assumption
 
     @Async
     @Scheduled(fixedRate = 100)

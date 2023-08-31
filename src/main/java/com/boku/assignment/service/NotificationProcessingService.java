@@ -48,6 +48,7 @@ public class NotificationProcessingService {
     }
 
     private void processNotification(NotificationDto notification) {
+        //todo hardcoded text
         ProviderResponse response =
                 new ProviderResponse(notification
                         , "Something went wrong. Please contact us at cs.boku.com to receive your service");
