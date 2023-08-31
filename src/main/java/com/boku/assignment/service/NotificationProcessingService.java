@@ -32,7 +32,7 @@ public class NotificationProcessingService {
     private final ExecutorService executorService = Executors.newFixedThreadPool(10); //todo move to constants/config
 
     @Async
-    @Scheduled(fixedRate = 1000) // process 10 job in 100 ms
+    @Scheduled(fixedRate = 1000) //todo
     public void processNotifications() {
         List<NotificationDto> notifications = notificationService.getNextNotifications();
         if (notifications == null || notifications.size() == 0) return;
@@ -50,16 +50,21 @@ public class NotificationProcessingService {
     }
 
     private void processNotification(NotificationDto notification) {
-        ResponseEntity<MerchantResponse> responseEntity = merchantService.sendNotification(notification);
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            MerchantResponse merchantResponse = responseEntity.getBody();
-            if (merchantResponse != null) {
-                responseService.addResponse(new ProviderResponse(merchantResponse,notification));
+        ProviderResponse response =
+                new ProviderResponse(notification
+                        , "Something went wrong. Please contact us at cs.boku.com to receive your service");
+        try {
+            ResponseEntity<MerchantResponse> responseEntity = merchantService.sendNotification(notification);
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                MerchantResponse merchantResponse = responseEntity.getBody();
+                if (merchantResponse != null) {
+                    response.setMessage(merchantResponse.getReply_message());
+                }
             }
-        } else {
-            //todo retry strategy
-            // we can try at least 3 times then we can move to other queue/ or store in db
-            notificationService.addNotification(notification); //adding to end of the queue
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            responseService.addResponse(response);
         }
     }
 }

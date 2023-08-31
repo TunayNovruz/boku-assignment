@@ -11,7 +11,6 @@ public class NotificationService {
     private final ConcurrentLinkedQueue<NotificationDto> notificationQueue = new ConcurrentLinkedQueue<>();
 
     public void addNotification(NotificationDto notificationDto) {
-        System.out.println("registered:" + notificationDto.getKeyword());
         notificationQueue.add(notificationDto);
     }
 

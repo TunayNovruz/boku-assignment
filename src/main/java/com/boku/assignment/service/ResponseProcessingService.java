@@ -47,12 +47,15 @@ public class ResponseProcessingService {
     }
 
     private void processResponse(ProviderResponse response) {
-        ResponseEntity<Void> responseEntity = providerService.sendResponse(response);
-        logger.info("{}", responseEntity);
-        if (responseEntity.getStatusCode() != HttpStatus.OK) {
-            //todo retry strategy
-            // we can try at least 3 times then we can move to other queue/ or store in db
-            responseService.addResponse(response); //adding to end of the queue
+        try {
+            ResponseEntity<Void> responseEntity = providerService.sendResponse(response);
+            if (responseEntity.getStatusCode() != HttpStatus.OK) {
+                //todo retry strategy or Dead Letter Queue
+                responseService.addResponse(response); //adding to end of the queue again
+            }
+        }catch (Exception e){
+            responseService.addResponse(response);
+            logger.error(e.getMessage());
         }
     }
 }

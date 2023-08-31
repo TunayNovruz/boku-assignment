@@ -21,7 +21,7 @@ public class NotificationController {
     }
 
     @GetMapping
-    public ResponseEntity<String> handlePaymentNotification(@ModelAttribute NotificationDto notificationDto) {
+    public ResponseEntity<String> addNotification(@ModelAttribute NotificationDto notificationDto) {
         try {
             notificationService.addNotification(notificationDto);
             return ResponseEntity.ok("OK");
